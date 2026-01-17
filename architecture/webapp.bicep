@@ -1,8 +1,10 @@
 param location string = 'westeurope'
 
+@allowed(['test', 'prod'])
+param environmentName string
 
 resource webapp 'Microsoft.Web/serverfarms@2024-11-01' = {
-    name: 'myfirstwebapp'
+    name: 'myfirstwebapp-${environmentName}'
     location: location
     sku: {
         name: 'B1'
@@ -10,7 +12,7 @@ resource webapp 'Microsoft.Web/serverfarms@2024-11-01' = {
 }
 
 resource website 'Microsoft.Web/sites@2024-11-01' = {
-    name:  'snieszwiec-fake-website-01'
+    name:  'snieszwiec-fake-website-01-${environmentName}'
     location: location
     dependsOn: [
         webapp
