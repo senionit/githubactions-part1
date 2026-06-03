@@ -1,0 +1,48 @@
+name: Workflow with check
+
+on: 
+    workflow_dispatch: 
+        inputs:
+          environment:
+            description: "Deployment environment"
+            required:  true
+            default: "DEV"
+            type: string
+          policy:
+            description: "policy number"
+            required: true
+            default: "05"
+            type: choice
+            options:
+              - "01"
+              - "02"
+              - "03"
+              - "04"
+              - "05"
+
+
+
+jobs:
+    Preparation:
+        runs-on: ubuntu-latest
+        env:
+            POLICY_NUMBER: ${{ inputs.policy }}
+            TF_VAR_POLICY_NUMBER: ${{ inputs.policy }}
+        steps:
+                - name: Checkout
+                  uses: actions/checkout@v4.2.2
+
+                - name: Terraform init
+                  uses: hashicorp/setup-terraform@v4
+                  with:
+                    terraform_version: 0.15.0
+                 
+                - name: Terraform init
+                  run: |
+                        terraform init
+                  working-directory: ./terraform/
+                - name: Terraform plan
+                  run: |
+                       terraform plan
+                       
+    
