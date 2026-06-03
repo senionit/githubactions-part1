@@ -19,6 +19,14 @@ on:
               - "03"
               - "04"
               - "05"
+          operation:
+            description: "What to do (plan, apply)"
+            required: true
+            default: "plan"
+            type: choice
+            options:
+                - "plan"
+                - "apply"
 
 
 
@@ -43,6 +51,14 @@ jobs:
                   working-directory: ./terraform/
                 - name: Terraform plan
                   run: |
-                       terraform plan
+                       terraform plan -out tfplan
+                  working-directory: ./terraform/
+                       
+                - name: Terraform apply
+                  if: success() && startsWith(inputs.operation, 'apply')
+                  run: |
+                        terraform apply -auto-approve tfplan     
+                  working-directory: ./terraform/
+
                        
     
